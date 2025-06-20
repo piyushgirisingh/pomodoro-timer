@@ -1,0 +1,18 @@
+# Python virtual environment
+backend/venv/
+
+# Flask cache
+__pycache__/
+*.pyc
+
+# Node modules
+frontend/node_modules/
+
+# React build folder
+frontend/build/
+
+# VS Code config
+.vscode/
+
+# MacOS system files
+.DS_Store
