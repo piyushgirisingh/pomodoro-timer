@@ -16,3 +16,5 @@ frontend/build/
 
 # MacOS system files
 .DS_Store
+
+.vite/
