@@ -1,11 +1,19 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 
+
+
+
+const ding = new Audio('/sounds/ding.mp3')
 function App() {
-  const [timeLeft, setTimeLeft] = useState(1 * 60); // 25 mins in seconds
+  const [timeLeft, setTimeLeft] = useState(10); // 25 mins in seconds
   const [isRunning, setIsRunning] = useState(false);
   const [message, setMessage] = useState('');
   const timerRef = useRef(null);
+
+  useEffect(() => {
+    ding.load();// Preload the sound
+  }, []);
 
   // Converts seconds to MM:SS format
   const formatTime = (seconds) => {
@@ -20,6 +28,9 @@ function App() {
       timerRef.current = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev === 1) {
+            ding.play().catch((err) => {
+              console.error("🔇 Sound failed to play:", err);
+            });
             clearInterval(timerRef.current);
             setIsRunning(false);
             notifyBackend();
@@ -75,6 +86,8 @@ function App() {
       </div>
 
       <p>{message}</p>
+      {/* 🔔 Test Sound Button */}
+      <button onClick={() => ding.play()}>Test Sound</button>
     </div>
   );
 }
