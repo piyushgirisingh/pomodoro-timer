@@ -25,5 +25,37 @@ A full-stack Pomodoro timer built with **React** (frontend) and **Flask** (backe
 
 ---
 
-## 📂 Project Structure
+## 🧪 Local Setup
+
+### 📦 Prerequisites
+- Node.js + npm
+- Python 3
+
+### 🔧 Backend (Flask)
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate  # or venv\Scripts\activate on Windows
+pip install flask flask-cors
+python app.py
+
+🌐 Frontend (React)
+
+cd frontend
+npm install
+npm start
+Visit: http://localhost:3000
+
+🧠 Upcoming Features
+
+ 5-min short breaks between sessions
+
+ Long break after 4 sessions
+
+ Tree animation growth like Forest 🌱
+
+ Sound alert on session complete
+
+ Daily streak tracking
+
 
