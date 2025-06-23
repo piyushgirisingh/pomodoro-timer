@@ -1,0 +1,16 @@
+.timer-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 1.2rem;
+    border-radius: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .timer-button:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+  }
+  

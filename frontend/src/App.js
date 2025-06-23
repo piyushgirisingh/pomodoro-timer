@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
+import './Timer.css';
+
 
 
 
@@ -9,7 +11,18 @@ function App() {
   const [timeLeft, setTimeLeft] = useState(10); // 25 mins in seconds
   const [isRunning, setIsRunning] = useState(false);
   const [message, setMessage] = useState('');
+  const [sessionCount, setSessionCount] = useState(0);
   const timerRef = useRef(null);
+
+  const getTreeStage = () => {
+    const stages = ["🌱", "🌿", "🌳", "🌴", "🎄"];
+    return stages[Math.min(sessionCount, stages.length - 1)];
+  };
+
+
+
+
+
 
   useEffect(() => {
     ding.load();// Preload the sound
@@ -33,6 +46,8 @@ function App() {
             });
             clearInterval(timerRef.current);
             setIsRunning(false);
+            setSessionCount((prev) => prev + 1);
+            setTimeLeft(10);
             notifyBackend();
             return 0;
           }
@@ -50,7 +65,7 @@ function App() {
   const resetTimer = () => {
     clearInterval(timerRef.current);
     setIsRunning(false);
-    setTimeLeft(1 * 60);
+    setTimeLeft(10);
   };
 
   const notifyBackend = async () => {
@@ -64,6 +79,18 @@ function App() {
     }
   };
 
+  const buttonStyle = {
+    padding: "0.8rem 1.5rem",
+    fontSize: "1.2rem",
+    borderRadius: "10px",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    border: "none",
+    cursor: "pointer",
+    transition: "all 0.2s ease-in-out",
+  };
+
+
 
 
   // Cleanup timer if component unmounts
@@ -71,23 +98,36 @@ function App() {
     return () => clearInterval(timerRef.current);
   }, []);
 
-  return (
-    <div style={{ fontFamily: 'Arial', padding: '2rem', textAlign: 'center' }}>
-      <h1>Pomodoro Timer 🍅</h1>
-      <h2>{formatTime(timeLeft)}</h2>
 
-      <div>
+  return (
+    <div style={{ fontFamily: 'Arial, sans-serif', padding: '2rem', textAlign: 'center', maxWidth: '600px', margin: 'auto' }}>
+
+      <h1> Pomodoro Timer 🍅</h1>
+      <h2 style={{ fontSize: "5rem", margin: "1rem 0", fontWeight: "bold" }}>
+        {formatTime(timeLeft)}
+      </h2>
+
+      <h3 style={{ fontSize: "3rem" }}>Focus Tree: {getTreeStage()}</h3>
+
+
+
+      <div style={{ marginBottom: "1rem" }}>
         {!isRunning ? (
-          <button onClick={startTimer}>Start</button>
+          <button className="timer-button" onClick={startTimer}>Start</button>
+
         ) : (
-          <button onClick={pauseTimer}>Pause</button>
+          <button className="timer-button" onClick={pauseTimer}>Pause</button>
         )}
-        <button onClick={resetTimer} style={{ marginLeft: '10px' }}>Reset</button>
+        <button className="timer-button" style={{ marginLeft: "1rem" }} onClick={resetTimer}>Reset</button>
+
       </div>
 
+
+
+
+
       <p>{message}</p>
-      {/* 🔔 Test Sound Button */}
-      <button onClick={() => ding.play()}>Test Sound</button>
+
     </div>
   );
 }
