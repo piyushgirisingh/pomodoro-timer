@@ -57,6 +57,8 @@ function App() {
     clearInterval(timerRef.current);
     setIsRunning(false);
     setTimeLeft(WORK_DURATION);
+    setSessionCount(0);
+    setMessage("");
   };
 
   const notifyBackend = async () => {
@@ -120,15 +122,15 @@ function App() {
 
   return (
     <div style={{ fontFamily: 'Arial, sans-serif', padding: '2rem', textAlign: 'center', maxWidth: '600px', margin: 'auto' }}>
-  
+
       <h1> Pomodoro Timer 🍅</h1>
-  
+
       <h2 style={{ fontSize: "5rem", margin: "1rem 0", fontWeight: "bold" }}>
         {formatTime(timeLeft)}
       </h2>
-  
+
       <h3 style={{ fontSize: "3rem" }}>Focus Tree: {getTreeStage()}</h3>
-  
+
       {/* 📊 Progress Bar Section */}
       <div style={{ marginTop: "1rem", width: "80%", marginLeft: "auto", marginRight: "auto" }}>
         <div style={{
@@ -148,7 +150,7 @@ function App() {
           {`Pomodoros completed: ${sessionCount} / ${DAILY_GOAL}`}
         </p>
       </div>
-  
+
       {/* Buttons */}
       <div style={{ marginBottom: "1rem", marginTop: "2rem" }}>
         {sessionCount >= DAILY_GOAL ? (
@@ -160,11 +162,11 @@ function App() {
         )}
         <button className="timer-button" style={{ marginLeft: "1rem" }} onClick={resetTimer}>Reset</button>
       </div>
-  
+
       <p>{message}</p>
     </div>
   );
-  
+
 }
 
 export default App;
