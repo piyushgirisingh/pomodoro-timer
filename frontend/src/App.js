@@ -95,6 +95,10 @@ function App() {
     return () => clearInterval(timerRef.current);
   }, [isRunning, sessionCount]);
 
+  useEffect(() => {
+    document.body.classList.toggle("dark-mode", darkMode);
+  }, [darkMode])
+
   const themeStyles = {
     backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
     color: darkMode ? "#ffffff" : "#000000",
