@@ -2,17 +2,19 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import './Timer.css';
 
+const ding = new Audio('/sounds/ding.mp3');
 
-const ding = new Audio('/sounds/ding.mp3')
 function App() {
-  const [timeLeft, setTimeLeft] = useState(10); // 25 mins in seconds
+  const [timeLeft, setTimeLeft] = useState(10); // Change to 1500 for 25 mins
   const [isRunning, setIsRunning] = useState(false);
   const [message, setMessage] = useState('');
   const [sessionCount, setSessionCount] = useState(0);
   const timerRef = useRef(null);
-  const DAILY_GOAL = 4;
-  const sessionCompletedRef = useRef(false); // Add this to prevent double trigger
+  const sessionCompletedRef = useRef(false);
+  const [darkMode, setDarkMode] = useState(false);
 
+  const DAILY_GOAL = 4;
+  const WORK_DURATION = 10; // Change to 1500 for 25 mins
 
   const getTreeStage = () => {
     const stages = ["🌱", "🌿", "🌳", "🌴", "🎄"];
@@ -23,30 +25,17 @@ function App() {
     return Math.min((sessionCount / DAILY_GOAL) * 100, 100);
   };
 
-
-
-
-
-
-  useEffect(() => {
-    ding.load();// Preload the sound
-  }, []);
-
-  // Converts seconds to MM:SS format
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
     const s = seconds % 60;
     return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
   };
 
-  const WORK_DURATION = 10;
-
   const startTimer = () => {
     if (!isRunning) {
       setIsRunning(true);
     }
   };
-
 
   const pauseTimer = () => {
     clearInterval(timerRef.current);
@@ -72,25 +61,14 @@ function App() {
     }
   };
 
-  const buttonStyle = {
-    padding: "0.8rem 1.5rem",
-    fontSize: "1.2rem",
-    borderRadius: "10px",
-    backgroundColor: "#007bff",
-    color: "#fff",
-    border: "none",
-    cursor: "pointer",
-    transition: "all 0.2s ease-in-out",
-  };
+  useEffect(() => {
+    ding.load();
+  }, []);
 
-
-
-
-  // Cleanup timer if component unmounts
   useEffect(() => {
     if (!isRunning || sessionCount >= DAILY_GOAL) return;
 
-    sessionCompletedRef.current = false; // reset before starting
+    sessionCompletedRef.current = false;
 
     timerRef.current = setInterval(() => {
       setTimeLeft((prev) => {
@@ -100,7 +78,7 @@ function App() {
           setTimeLeft(WORK_DURATION);
 
           if (!sessionCompletedRef.current) {
-            sessionCompletedRef.current = true; // ✅ prevents double count
+            sessionCompletedRef.current = true;
             setSessionCount((prev) => prev + 1);
             ding.play().catch((err) => {
               console.error("🔇 Sound failed to play:", err);
@@ -114,14 +92,40 @@ function App() {
       });
     }, 1000);
 
-    return () => clearInterval(timerRef.current); // ✅ clean on unmount
+    return () => clearInterval(timerRef.current);
   }, [isRunning, sessionCount]);
 
-
-
+  const themeStyles = {
+    backgroundColor: darkMode ? "#1e1e1e" : "#f5f5f5",
+    color: darkMode ? "#ffffff" : "#000000",
+    transition: "all 0.3s ease",
+    fontFamily: 'Arial, sans-serif',
+    padding: '2rem',
+    textAlign: 'center',
+    maxWidth: '600px',
+    margin: 'auto',
+    minHeight: '100vh'
+  };
 
   return (
-    <div style={{ fontFamily: 'Arial, sans-serif', padding: '2rem', textAlign: 'center', maxWidth: '600px', margin: 'auto' }}>
+    <div style={themeStyles}>
+      <button
+        onClick={() => setDarkMode(!darkMode)}
+        style={{
+          position: "absolute",
+          top: "1rem",
+          right: "1rem",
+          padding: "0.5rem 1rem",
+          fontSize: "1rem",
+          borderRadius: "5px",
+          border: "none",
+          backgroundColor: darkMode ? "#ffc107" : "#333",
+          color: darkMode ? "#000" : "#fff",
+          cursor: "pointer"
+        }}
+      >
+        {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+      </button>
 
       <h1> Pomodoro Timer 🍅</h1>
 
@@ -135,14 +139,14 @@ function App() {
       <div style={{ marginTop: "1rem", width: "80%", marginLeft: "auto", marginRight: "auto" }}>
         <div style={{
           height: "20px",
-          backgroundColor: "#e0e0e0",
+          backgroundColor: darkMode ? "#444" : "#e0e0e0",
           borderRadius: "10px",
           overflow: "hidden"
         }}>
           <div style={{
             width: `${getProgressPercentage()}%`,
             height: "100%",
-            backgroundColor: getProgressPercentage() === 100 ? "#28a745" : "#007bff",
+            backgroundColor: getProgressPercentage() === 100 ? "#28a745" : (darkMode ? "#90caf9" : "#007bff"),
             transition: "width 0.4s ease"
           }} />
         </div>
@@ -166,9 +170,6 @@ function App() {
       <p>{message}</p>
     </div>
   );
-
 }
 
 export default App;
-
-
